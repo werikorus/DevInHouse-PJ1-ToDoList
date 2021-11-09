@@ -1,17 +1,22 @@
 body{
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
   align-items: baseline;
   align-self: center;  
-  align-items: center;
+  margin: 0;
 }
+
 section{
   flex-direction: column;
   align-items: baseline;
   margin: auto;
+}
+
+section h1{
+  text-align: center;
 }
 
 main{
@@ -38,18 +43,34 @@ main{
   /* margin: auto; */
 }
 
+#itemInput{
+  margin: 1px;
+  height: 2rem;
+  width: 13rem;
+}
+
 #addButton{
   height: 95%;
 }
 
-#items{
-  width: 100%;
-  display: grid;
-
-  flex-direction: row;
+.deleteButto{
+  align-content: center;
+  text-align: center;
+  align-self: center;
+  align-items: center;
 }
 
-#itemInput{
-  margin: 1px;
-  height: 2rem;
+#divItems{
+  display: flex;
+  font-size: 1.2rem;
+  align-self: auto;
+  align-items: flex-end;
+}
+
+ol{
+  list-style: none;
+}
+
+li{
+  margin: 3px;
 }
