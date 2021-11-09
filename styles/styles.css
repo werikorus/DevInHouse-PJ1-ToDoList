@@ -1,0 +1,55 @@
+body{
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  align-items: baseline;
+  align-self: center;  
+  align-items: center;
+}
+section{
+  flex-direction: column;
+  align-items: baseline;
+  margin: auto;
+}
+
+main{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#card{
+  display: flex;
+  width: 20rem;
+  height: 23rem;
+  /* border: solid 1px black; */
+  /* border-radius: 15px; */
+  flex-direction: column;
+}
+
+#records{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* margin: auto; */
+}
+
+#addButton{
+  height: 95%;
+}
+
+#items{
+  width: 100%;
+  display: grid;
+
+  flex-direction: row;
+}
+
+#itemInput{
+  margin: 1px;
+  height: 2rem;
+}
