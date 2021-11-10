@@ -61,16 +61,32 @@ main{
 }
 
 #divItems{
-  display: flex;
+  width: 100%;
+  display: grid;
   font-size: 1.2rem;
-  align-self: auto;
-  align-items: flex-end;
+  justify-content: spacea ;
 }
 
 ol{
+  width: 100%;
   list-style: none;
+  display: grid;
 }
 
 li{
+  width: 100%;
   margin: 3px;
+  font-size: 1.5rem;
+  border: 1px black;
+  border-radius: 2px;
+  transition: 0.2s;
+  align-content: center;
+  align-self: center;
+  align-items: center;
+  /* text-decoration: line-through; */
+}
+
+li:hover{
+  background-color: rgb(166, 89, 238);
+  color: white;
 }

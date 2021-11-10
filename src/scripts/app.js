@@ -1,70 +1,70 @@
+var TaskList = [];
+
 function LoadList(){
-  const storage = JSON.parse(localStorage.getItem('companies'));
+  // const checkItem = document.getElementsByTagName('LI');
+
+  // checkItem.addEventListener('change', function(e){
+  //   checkItem.style.textdecoration = "line-through";
+  //   alert('Mudou!!');
+  // });
+  
+  const storage = JSON.parse(localStorage.getItem('lista'));
 
   if (storage===null){
-    var messageReturn = [{
-      message: "Ainda não há históricos"
-    }];
-    setMessages(messageReturn);
+    alert('Ainda não há uma lista à fazer!\nAproite e crie uma.');
   }else{
-    setCompanies(storage);
+    TaskList = storage;
+    for(var i=0; i<=TaskList.length-1; i++){
+      createElement(TaskList[i]);
+    };
   };
+
 };
 
 function AddItem(){
-  const task = document.getElementById('itemInput').value;
-  
-  var TaskList = [];
+  var task = document.getElementById('itemInput').value;
 
-  TaskList.push(task);
-
-  // criacao dos elementoss sendo o pai LI e filhos o input e botao
-
-  var nodeLI = document.createElement("LI");
-  var valuenode = document.createTextNode("wawsdfas");
-      nodeLI.appendChild(valuenode);
-
-  var item = document.createElement("INPUT");
-      item.setAttribute("type",'checkbox');
-
-  var label = document.createElement("LABEL");
-  var labeltext = document.createTextNode(task);
-      label.appendChild(labeltext);
-
-  item.appendChild(label);
-
-  console.log(label);
-
-
-  var valueItem = document.createTextNode(task);
-      item.appendChild(valueItem);
-
-       
-
-    // var deleteButton = document.createElement("BUTTON");
-    // deleteButton.setAttribute("class", "deleteButton")
-  
-  document.getElementById("ordenedList").appendChild(label);
-
-  // console.log(TaskList);
-
-  // for(var i=0; i<=TaskList.length-1; i++){
-  //   <li typeclass="itemList">
-  //   <input  type="checkbox">Primeiro item</input> 
-  //   <button class="deleteButton">x</button>
-  // </li>
-
-  //   console.log(TaskList[i]);
-  // }
- 
+  if(task==""){
+    alert('Informe um item para a lista!');
+  }else{  
+    TaskList.push(1, task);
+    createElement(task);
+    setLocalData(TaskList);
+  };
 }; 
 
 function DeleteItem(){
 
 };
 
-function createElement(){
-  // rotinas para criação dos elemntos aqui
+function createElement(task){
+    // criacao dos elementoss sendo o pai LI e filhos o input e botao
+
+    var item = document.createElement("LI");
+        item.setAttribute("class",'itemList');
+
+
+    var input = document.createElement("INPUT");
+        input.setAttribute("type",'checkbox');
+        input.setAttribute("name",'checkItem');
+        
+
+    var label = document.createElement("LABEL");
+    var labeltext = document.createTextNode(task);
+        label.appendChild(labeltext);
+
+
+    var buttonDelete = document.createElement("BUTTON");
+        buttonDelete.setAttribute('class', 'deleteButton');
+
+    var textButton = document.createTextNode('x');
+        buttonDelete.appendChild(textButton);    
+
+        item.appendChild(input)
+        item.appendChild(label);
+        item.appendChild(buttonDelete)
+  
+    document.getElementById("ordenedList").appendChild(item);
 };
 
 function MarkDown(){
@@ -73,19 +73,19 @@ function MarkDown(){
 
 
 function setLocalData(dados) {
-  let empresas = JSON.parse(localStorage
-    .getItem('companies')) || []
+  let lista = JSON.parse(localStorage
+    .getItem('lista')) || []
 
-  //  se ja tem o mesmo valor dentro do localStorage, remover
-  const index = empresas.indexOf(dados)
-  const existsInLocalStorage = (index !== -1);
+  // se já tiver o mesmo item, revome
+  const index = lista.indexOf(dados)
+  const existsData = (index !== -1);
 
-  if (existsInLocalStorage) {
-    empresas.splice(index, 1)
+  if (existsData) {
+    lista.splice(index, 1)
   } else {
-    empresas.push(dados)
+    lista.push(dados);
   };
 
   // insere no local storage
-  localStorage.setItem('companies', JSON.stringify(empresas));
+  localStorage.setItem('lista', JSON.stringify(lista));
 };

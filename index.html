@@ -22,8 +22,11 @@
             <button id="addButton" onclick={AddItem()}>Adicionar</button>
           </div>
           <div id=divItems>
+            <!-- <button id="checkItem">oi</button> -->
             <ol id="ordenedList">
-              <li typeclass="itemList">
+              <li id="checkItem">
+               <input  type="checkbox">Primeiro item</input> 
+               <button class="deleteButton">x</button>
               </li>
             </ol>
           </div>
@@ -31,6 +34,9 @@
       </id>  
     </section>
   </main>
+  <script>
+    LoadList();
+  </script>
 </body>
 <script>
 </script>
