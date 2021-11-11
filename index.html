@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="ept-BR">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles/styles.css">
+  <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon" />
   <script type="text/javascript" src="src/scripts/app.js"></script>
   <title>To-Do-List</title>
 </head>
@@ -17,22 +18,24 @@
       <h1>To Do List</h1> 
       <div id="card">
         <div id="records">
-          <div >
+          <form onsubmit="return false;">
             <input id="itemInput" type="text" placeholder="Digite uma tarefa...">
             <button id="addButton" onclick={AddItem()}>Adicionar</button>
-          </div>
+          </form>
+          <button id="addButton" onclick={testeCheck()}>Tester</button>
+
           <div id=divItems>
-            <!-- <button id="checkItem">oi</button> -->
-            <ol id="ordenedList">
-              <li id="checkItem">
-               <input  type="checkbox">Primeiro item</input> 
-               <button class="deleteButton">x</button>
-              </li>
-            </ol>
+            <ul id="ordenedList">
+              <!-- <li class="itemList" id="item_0001">
+                <input id="itemwerik" type="checkbox" onclick={testeCheck()} name="checkItem" >
+                <label>Item WErik</label>
+                <button class="deleteButton" onclick={testeCheck()}>x</button>
+              </li> -->
+            </ul>
           </div>
         </div>
-      </id>  
-    </section>
+      </id>
+</section>
   </main>
   <script>
     LoadList();

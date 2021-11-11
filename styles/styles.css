@@ -9,6 +9,10 @@ body{
   margin: 0;
 }
 
+li{
+  box-sizing: border-box;
+}
+
 section{
   flex-direction: column;
   align-items: baseline;
@@ -40,7 +44,6 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* margin: auto; */
 }
 
 #itemInput{
@@ -53,7 +56,9 @@ main{
   height: 95%;
 }
 
-.deleteButto{
+.deleteButton{
+  height: 6mm;
+  width: 6mm;
   align-content: center;
   text-align: center;
   align-self: center;
@@ -64,16 +69,16 @@ main{
   width: 100%;
   display: grid;
   font-size: 1.2rem;
-  justify-content: spacea ;
 }
 
-ol{
+ul{
   width: 100%;
   list-style: none;
   display: grid;
 }
 
 li{
+  margin-bottom: 2.5mm;
   width: 100%;
   margin: 3px;
   font-size: 1.5rem;
@@ -83,7 +88,6 @@ li{
   align-content: center;
   align-self: center;
   align-items: center;
-  /* text-decoration: line-through; */
 }
 
 li:hover{
