@@ -281,6 +281,6 @@ function GetAtualDate(){
 };
 
 function SetFocus(element){
-  alert('Muito bem! Comece digitando sua primeira tarefa...')
+  alert('Muito bem! Comece digitando sua primeira tarefa...');
    element.focus();
 }

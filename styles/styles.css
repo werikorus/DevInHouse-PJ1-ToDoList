@@ -192,8 +192,8 @@ label{
 #ListControl{
   display: flex;
   flex-direction: row;
-  margin-top: 5rem;
-  margin-bottom: 5rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
   border-radius: 2mm 2mm 2mm 2mm;
   justify-content: center;
   align-self: center;
@@ -224,7 +224,11 @@ label{
 }
 
 footer{
+  position: fixed;
+  bottom:0;
+  left:0;
   height: 9%;
+  width: 100%;
 }
 
 #copyright{
