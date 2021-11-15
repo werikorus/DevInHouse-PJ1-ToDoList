@@ -3,42 +3,32 @@ var itemInfo = {};
 var itemID = '';
 
 function LoadList(){
-  const storage = JSON.parse(localStorage.getItem('lista'));
+// carregamento dos dados do localstorage na tela
 
-  if (storage===null||storage.length==0){
+  const TaskList = JSON.parse(localStorage.getItem('lista'))||[];
+
+  if (TaskList===null||TaskList.length==0){
     alert('Bem vindo!\nCrie sua lista agora! :)');
-    const card = document.getElementById("card");
-
-    const defaultImg = document.createElement('img');
-    let defaultImgSrc = `/assets/images/createNewList.png`;
-    defaultImg.setAttribute('src', defaultImgSrc);
-    defaultImg.setAttribute('id', 'defaultImg');
-
-    card.appendChild(defaultImg);
+    createAddInitialELement();
   }else{
-    TaskList = storage;
+    let countListLeft = 0;
     for(var i=0; i<=TaskList.length-1; i++){
-      var countItensLeft=0;
-      if(TaskList[i].taskDone){
-        countItensLeft+=1;
-      }
-      console.log(countItensLeft)
+      countListLeft += !TaskList[i].taskDone?0:1;
 
-        
       createListElements(TaskList[i].id, 
                          TaskList[i].description, 
                          TaskList[i].taskDone);
     };
-    CreateControlElements(TaskList.length, 1);
+    CreateControlElements(TaskList.length, countListLeft);
   };
 };
 
 function AddItem(){
-  const storage = JSON.parse(localStorage.getItem('lista'));
-  TaskList = storage;
+// adiconar 1 item na lista
 
-  const idTaskList = TaskList.length||TaskList.length+1;
-  var task = document.getElementById('itemInput').value;
+  const TaskList = JSON.parse(localStorage.getItem('lista'))||[];
+  const idTaskList = TaskList!==null?TaskList.length+1:0;
+  const task = document.getElementById('itemInput').value;
 
   if(task!=""){
     TaskList.push(idTaskList, task);
@@ -50,10 +40,22 @@ function AddItem(){
       dateCreation: GetAtualDate(),
       dateUpdate: GetAtualDate()
     };
-    
+ 
     setLocalData(itemInfo);
     createListElements(idTaskList, task, false);
     task.InnerContent = '';
+
+    if(TaskList[0]==1){
+      CreateControlElements(1,0);
+    }else{
+      let countListLeft = 0;
+
+      for(var i=0; i<=TaskList.length-1; i++){
+        countListLeft += TaskList[i].taskDone?1:0;
+      };
+    
+      UpdateController(TaskList.length-1, countListLeft);
+    }
   }else{  
     alert('Iforme uma tarefa!');
   };
@@ -61,6 +63,8 @@ function AddItem(){
 }; 
 
 function DeleteItem(id, Element){
+// deletar 1 item da lista
+
   if(window.confirm("Quer realmente excluir o item da sua tarefa?")){
      TaskList.splice(id-1, 1);
  
@@ -70,17 +74,23 @@ function DeleteItem(id, Element){
 
      Element.remove();    
   }
+
+  if(TaskList.length==0||TaskList!==null){
+    const controller = document.getElementById('ListControl');
+    controller.remove();  
+  }
 };
 
 function UpdateItem(id){
-  const storage = JSON.parse(localStorage.getItem('lista'));
-  TaskList = storage;
+// atualizar o item
+
+  TaskList = JSON.parse(localStorage.getItem('lista'));
 
   const itemInfo = {
-    id: storage[id].id,
-    description: storage[id].description,
-    taskDone: storage[id].taskDone?false:true,
-    dateCreation: storage[id].dateCreation,
+    id: TaskList[id].id,
+    description: TaskList[id].description,
+    taskDone: TaskList[id].taskDone?false:true,
+    dateCreation: TaskList[id].dateCreation,
     dateUpdate: GetAtualDate()
   };
  
@@ -92,6 +102,16 @@ function UpdateItem(id){
 }; 
 
 function CheckItem(id, label){
+// marcar  e estilizasr o item quando a tarefa tiver concluida
+
+  TaskList = JSON.parse(localStorage.getItem('lista'));
+
+  let countListLeft = 0;
+
+  for(var i=0; i<=TaskList.length-1; i++){
+    countListLeft += !TaskList[i].taskDone?1:0;
+  };
+
   if(label.style.textDecorationLine==''||label.style.textDecorationLine=='none'){
     label.style.textDecorationLine = "line-through"; 
     label.style.fontStyle = "italic";
@@ -102,10 +122,13 @@ function CheckItem(id, label){
     label.style.opacity = 1;
   };
 
+  UpdateController(TaskList.length, countListLeft);
   UpdateItem(id-1);
 };
 
 function createListElements(id, taskCaption, taskDone){
+//Criação dos elementos de cada item da lista
+
   var defaultImg = document.getElementById('defaultImg');
   if(defaultImg!=null){
     defaultImg.remove();
@@ -156,43 +179,45 @@ function createListElements(id, taskCaption, taskDone){
 };
 
 function setLocalData(dados) {
+//funcao para gravar os dados no localstorage
+
   TaskList = JSON.parse(localStorage.getItem('lista')) || [];
 
-  // se já tiver o mesmo item, revome
+  //verifica se já existe no array
   const index = TaskList.indexOf(dados)
   const existsData = (index !== -1);
 
-  //splice apaga  o item de acordo com sua posição
+  //se tiver, remove
   if (existsData) {
     TaskList.splice(index, 1)
   } else {
     TaskList.push(dados);
   };
-
-  // insere no local storage
+ 
   localStorage.setItem('lista', JSON.stringify(TaskList));
 };
 
 function deleteLocalData(){
+  //Deletar itens do localstorage
+
   if(window.confirm("Deseja realmente excluir sua lista?")){
     const itemsLista = document.getElementsByTagName("li");
     
     for(var i=0; i<=itemsLista.length+1; i++){
       itemsLista[0].remove();
     }
-    
-    localStorage.clear(); 
+    localStorage.removeItem('lista'); 
   }
-}
 
-function CreateControlElements(total, totalLeft){
-  console.log(`Concluídas: ${total}/${totalLeft}`);
+  const controller = document.getElementById('ListControl');
+  controller.remove();  
+};
 
-
+function CreateControlElements(total, itemsLeft){
   // criacao do botao para deletar a lista   
   const textControl = document.getElementById('textControl');
 
-  textControl.innerText = `Concluídas: ${total}/${totalLeft}`;
+  textControl.innerText = `Concluídas: ${itemsLeft}/${total}`;
 
   const deleteListButton = document.createElement("button");
         deleteListButton.setAttribute('id', 'deleteListBtn'); 
@@ -209,19 +234,30 @@ function CreateControlElements(total, totalLeft){
   form.appendChild(deleteListButton);
 }
 
-function Confirm(){
-  // criação de um popup estilizado
+function UpdateController(total, itemsLeft){
+// atualizar as informacoes de controle
 
-  const body = document.getElementsByTagName('body');
-  //       body[0].style = 0.01;
-  
-  const PopUp = document.createElement('div');
-  const popUpContent = document.createTextNode("CONFIRMA??")
-        PopUp.appendChild(popUpContent);
-        PopUp.style.backgroundColor = "blue";
+const textControl = document.getElementById('textControl'); 
+  textControl.innerText = `Concluídas: ${itemsLeft}/${total}`;
 }
+function createAddInitialELement(){
+  // criacao do elemento inicial da tela quando não tem lista
+  const card = document.getElementById("card");
+
+  const defaultImg = document.createElement('img');
+  let defaultImgSrc = `/assets/images/createNewList.png`;
+  defaultImg.setAttribute('src', defaultImgSrc);
+  defaultImg.setAttribute('id', 'defaultImg');
+
+  const itemInput = document.getElementById('itemInput');
+  defaultImg.setAttribute('onClick',`SetFocus(${itemInput.id})`);
+
+  card.appendChild(defaultImg);
+};
 
 function GetAtualDate(){
+ //funcao para pegar data atual retornando formatado
+
   const date = new Date();
   const day = date.getUTCDate();
   const month = date.getUTCMonth()+1;
@@ -233,3 +269,8 @@ function GetAtualDate(){
   const today = `${day}/${month}/${year} ${hour}:${min}:${sec}`;
   return today;
 };
+
+function SetFocus(element){
+  alert('Muito bem! Comece digitando sua primeira tarefa.')
+   element.focus();
+}
