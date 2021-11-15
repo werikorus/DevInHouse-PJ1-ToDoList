@@ -2,25 +2,42 @@ var TaskList = [];
 var itemInfo = {};
 var itemID = '';
 
-
 function LoadList(){
   const storage = JSON.parse(localStorage.getItem('lista'));
 
   if (storage===null||storage.length==0){
-    alert('Ainda não há uma lista à fazer!\nAproite e crie uma.');
+    alert('Bem vindo!\nCrie sua lista agora! :)');
+    const card = document.getElementById("card");
+
+    const defaultImg = document.createElement('img');
+    let defaultImgSrc = `/assets/images/createNewList.png`;
+    defaultImg.setAttribute('src', defaultImgSrc);
+    defaultImg.setAttribute('id', 'defaultImg');
+
+    card.appendChild(defaultImg);
   }else{
     TaskList = storage;
     for(var i=0; i<=TaskList.length-1; i++){
-      createElementHTML(TaskList[i].id, TaskList[i].description, TaskList[i].taskDone);
+      var countItensLeft=0;
+      if(TaskList[i].taskDone){
+        countItensLeft+=1;
+      }
+      console.log(countItensLeft)
+
+        
+      createListElements(TaskList[i].id, 
+                         TaskList[i].description, 
+                         TaskList[i].taskDone);
     };
+    CreateControlElements(TaskList.length, 1);
   };
 };
 
 function AddItem(){
   const storage = JSON.parse(localStorage.getItem('lista'));
-  // const idStorage = (storage===null?1:storage.length-1);
-  // const idTaskList = (TaskList==0?0:TaskList.length+1);
-  const idTaskList = TaskList.length+1;
+  TaskList = storage;
+
+  const idTaskList = TaskList.length||TaskList.length+1;
   var task = document.getElementById('itemInput').value;
 
   if(task!=""){
@@ -35,70 +52,107 @@ function AddItem(){
     };
     
     setLocalData(itemInfo);
-    createElementHTML(idTaskList, task, false);
+    createListElements(idTaskList, task, false);
+    task.InnerContent = '';
   }else{  
-    alert('Informe um item para a lista!');
+    alert('Iforme uma tarefa!');
+  };
+  
+}; 
+
+function DeleteItem(id, Element){
+  if(window.confirm("Quer realmente excluir o item da sua tarefa?")){
+     TaskList.splice(id-1, 1);
+ 
+     if (!(TaskList == [])){
+       localStorage.setItem('lista', JSON.stringify(TaskList)); 
+     };
+
+     Element.remove();    
+  }
+};
+
+function UpdateItem(id){
+  const storage = JSON.parse(localStorage.getItem('lista'));
+  TaskList = storage;
+
+  const itemInfo = {
+    id: storage[id].id,
+    description: storage[id].description,
+    taskDone: storage[id].taskDone?false:true,
+    dateCreation: storage[id].dateCreation,
+    dateUpdate: GetAtualDate()
+  };
+ 
+  TaskList.splice(id, 1, itemInfo);
+ 
+  if(!(TaskList == [])){
+    localStorage.setItem('lista', JSON.stringify(TaskList)); 
   };
 }; 
 
-function DeleteItem(id, idElement){
-  TaskList.splice(id-1, 1);
-
-  if (!(TaskList == [])){
-    localStorage.setItem('lista', JSON.stringify(TaskList)); 
+function CheckItem(id, label){
+  if(label.style.textDecorationLine==''||label.style.textDecorationLine=='none'){
+    label.style.textDecorationLine = "line-through"; 
+    label.style.fontStyle = "italic";
+    label.style.opacity = 0.5;
+  }else{
+    label.style.textDecorationLine = "none";
+    label.style.fontStyle = "normal";
+    label.style.opacity = 1;
   };
 
-  const item = document.getElementById(idElement);
-  item.remove();
+  UpdateItem(id-1);
 };
 
-function createElementHTML(id, task, taskDone){
+function createListElements(id, taskCaption, taskDone){
+  var defaultImg = document.getElementById('defaultImg');
+  if(defaultImg!=null){
+    defaultImg.remove();
+  }
 
-  // criacao dos elementoss sendo o pai LI e filhos o input e botao
+  // criacao dos elementos items da lista
   const itemID = `item_000${id}`;
+  const labelID = `label_000${id}`;
 
   const item = document.createElement("LI");
         item.setAttribute("class",'itemList');
         item.setAttribute("id", `${itemID}`);
-
-
+        
   const input = document.createElement("INPUT");
         input.setAttribute("type",'checkbox');
         input.setAttribute("name",'checkItem');
-        input.setAttribute("checked", taskDone);
-        input.setAttribute("OnChange",`MarkDown(${id},"${itemID}")`);
+        input.setAttribute("OnChange",`CheckItem(${id}, ${labelID})`);
 
-      
   const label = document.createElement("LABEL");
-  const labeltext = document.createTextNode(task);
+        label.setAttribute("id",`${labelID}`);
+  const labeltext = document.createTextNode(taskCaption);
         label.appendChild(labeltext);
-
-
+      
   const buttonDelete = document.createElement("BUTTON");
         buttonDelete.setAttribute('class','deleteButton');
-        buttonDelete.setAttribute('OnClick',`DeleteItem(${id},"${itemID}")`);
+        buttonDelete.setAttribute('OnClick',`DeleteItem(${id}, ${itemID})`);
+        
+  const delImg = document.createElement('IMG');
+  const srcdel = "/assets/images/deleteIMG.png";
 
-  const textButton = document.createTextNode('x');
-        buttonDelete.appendChild(textButton);    
+        delImg.setAttribute('src', srcdel);
+        delImg.setAttribute('name','deleteIMG');
 
-      item.appendChild(input);
-      item.appendChild(label);
-      item.appendChild(buttonDelete);
+        buttonDelete.appendChild(delImg);
+      
+  if(taskDone){
+    input.setAttribute("checked", 'checked');
+    label.style.textDecorationLine = "line-through"; 
+    label.style.fontStyle = "Italic";
+    label.style.opacity = 0.5;
+  };
+
+  item.appendChild(input);
+  item.appendChild(label);
+  item.appendChild(buttonDelete);
 
   document.getElementById("ordenedList").appendChild(item);
-  console.log(input);
-};
-
-function MarkDown(id, idElement){
-  const item = document.getElementById(idElement);
-
-  if(item.style.textDecorationLine==''||item.style.textDecorationLine=='none'){
-    item.style.textDecorationLine = "line-through"; 
-  }else{
-    item.style.textDecorationLine = "none"; 
-  }
-
-  UpdateItem(id-1);
 };
 
 function setLocalData(dados) {
@@ -119,28 +173,53 @@ function setLocalData(dados) {
   localStorage.setItem('lista', JSON.stringify(TaskList));
 };
 
-function UpdateItem(id){
-  const storage = JSON.parse(localStorage.getItem('lista'));
-  TaskList = storage;
+function deleteLocalData(){
+  if(window.confirm("Deseja realmente excluir sua lista?")){
+    const itemsLista = document.getElementsByTagName("li");
+    
+    for(var i=0; i<=itemsLista.length+1; i++){
+      itemsLista[0].remove();
+    }
+    
+    localStorage.clear(); 
+  }
+}
 
-  console.log(TaskList[id]);
-  console.log(storage[id]);
+function CreateControlElements(total, totalLeft){
+  console.log(`Concluídas: ${total}/${totalLeft}`);
 
-  const itemInfo = {
-    id: storage[id].id,
-    description: storage[id].description,
-    taskDone: storage[id].taskDone?false:true,
-    dateCreation: storage[id].dateCreation,
-    dateUpdate: GetAtualDate()
-  };
+
+  // criacao do botao para deletar a lista   
+  const textControl = document.getElementById('textControl');
+
+  textControl.innerText = `Concluídas: ${total}/${totalLeft}`;
+
+  const deleteListButton = document.createElement("button");
+        deleteListButton.setAttribute('id', 'deleteListBtn'); 
+        deleteListButton.setAttribute('onClick', "deleteLocalData()")
+
+  const imgDelList = document.createElement('img');
+
+  const srcDelListIMG = "/assets/images/deleteListIMG.png"
+        imgDelList.setAttribute('src', srcDelListIMG) 
+        deleteListButton.appendChild(imgDelList);
+
+  const form = document.getElementById('ListControl');  
   
-  TaskList.splice(id, 1, itemInfo);
-  console.log(TaskList[id]);
+  form.appendChild(deleteListButton);
+}
 
-  if (!(TaskList == [])){
-    localStorage.setItem('lista', JSON.stringify(TaskList)); 
-  };
-};
+function Confirm(){
+  // criação de um popup estilizado
+
+  const body = document.getElementsByTagName('body');
+  //       body[0].style = 0.01;
+  
+  const PopUp = document.createElement('div');
+  const popUpContent = document.createTextNode("CONFIRMA??")
+        PopUp.appendChild(popUpContent);
+        PopUp.style.backgroundColor = "blue";
+}
 
 function GetAtualDate(){
   const date = new Date();
@@ -152,15 +231,5 @@ function GetAtualDate(){
   const sec = date.getSeconds();
 
   const today = `${day}/${month}/${year} ${hour}:${min}:${sec}`;
-
   return today;
 };
-
-function testeCheck(){
-  const item = document.getElementById("itemwerik");
-  // item.setAttribute("checked", "true");
-
-  item.click();
-
-  console.log(item);
-}

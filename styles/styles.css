@@ -1,96 +1,251 @@
-body{
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  font-family: sans-serif;
-  align-items: baseline;
-  align-self: center;  
-  margin: 0;
+:root {
+  --color-background: #f0f0f7;
+  --color-input-background: #f8f8fc;
+  --color-line-in-white: #e6e6f0;
+  --color-footer: #fafafc; 
+  --color-header-background: #8BC6EC;
+  --color-header-background-image:linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  --color-basic-text: rgb(73, 73, 73);
 }
-
-li{
+*{
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-section{
+html,
+body{
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  display: flex;
   flex-direction: column;
-  align-items: baseline;
-  margin: auto;
+  font-family: Poppins, sans-serif;
+  background: var(--color-background);
+  color: var(--color-basic-text);
 }
 
-section h1{
+header{
+  height: 15rem;
+  flex-direction: column;
+  align-content: center;
+  align-items: baseline; 
+  background-color: var(--color-header-background);
+  background-image: var(--color-header-background-image);
+}
+#headerContent {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+#headerContent > h1{
   text-align: center;
+  color: white;
 }
 
+#formInput{
+  display: flex;
+  flex-direction: row;
+  margin-left: 0.8rem;
+  margin-right: 0.8rem;
+  justify-content: center;
+  align-self: center;
+}
+#itemInput{
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+  min-width: 100px;
+  height: 3.5rem;
+  color: var(--color-basic-text);
+  
+  align-items: center;
+  border-radius: 0.6rem 0 0 0.6rem;
+  border: 1px solid white;
+  outline: 0;
+  padding-left: 53px;
+  font-size: 1.5rem;
+}
+#addIMG{
+  height: 12mm;
+  padding-top: 1.3mm;
+}
+
+#addButton{
+  display: flexbox;
+  width: 3.5rem;
+  outline: 0;
+  border: none;
+  align-items: center;
+  align-content: center;
+  border-radius: 0 0.6rem 0.6rem 0;
+  transition: 0.2s;
+}
 main{
   width: 100%;
   height: 100vh;
   display: flex;
+  align-items: baseline;
   flex-direction: column;
   align-items: center;
+}
+section{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-content: center;
+  align-self: center;
+  margin: auto;
 }
 
 #card{
   display: flex;
-  width: 20rem;
-  height: 23rem;
-  /* border: solid 1px black; */
-  /* border-radius: 15px; */
+  width: 50%;
   flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
 }
 
-#records{
+#card #defaultImg{
+  height: 6rem;
+  transition: 0.2s;
+}
+#card #defaultImg:hover{
+  height: 6.5rem;
+}
+
+#formItens{
   display: flex;
+  min-width: 335px;
   flex-direction: column;
-  align-items: center;
-}
-
-#itemInput{
-  margin: 1px;
-  height: 2rem;
-  width: 13rem;
-}
-
-#addButton{
-  height: 95%;
-}
-
-.deleteButton{
-  height: 6mm;
-  width: 6mm;
+  justify-content: center;
   align-content: center;
-  text-align: center;
-  align-self: center;
-  align-items: center;
-}
-
-#divItems{
-  width: 100%;
-  display: grid;
-  font-size: 1.2rem;
+  align-items: center;  
 }
 
 ul{
+  display: flexbox;
   width: 100%;
-  list-style: none;
-  display: grid;
+  padding-left: 0rem;
 }
 
-li{
-  margin-bottom: 2.5mm;
-  width: 100%;
-  margin: 3px;
-  font-size: 1.5rem;
-  border: 1px black;
+ul > li{
+  list-style: none;
+  color: var(--color-basic-text);
+  display: flex;
+  margin-bottom: 2mm;
+  font-size: 1.3rem;
   border-radius: 2px;
   transition: 0.2s;
-  align-content: center;
-  align-self: center;
-  align-items: center;
+  background-color: var(--color-footer);
+  justify-content: space-between;  
+  padding: 10px;
+  border-radius: 0.3rem;
+  box-shadow: rgba(79, 78, 78, 0.522) 1px 0.1px 10px;
 }
 
 li:hover{
-  background-color: rgb(166, 89, 238);
+  background-color: var(--color-header-background);
+  background-image: var(--color-header-background-image);
   color: white;
+}
+
+li > input{
+  height: 1rem;
+  width: 1rem;
+  margin: 0 3mm 0 3mm;
+  
+  text-align: center;
+  align-self: center;
+  align-items: center;
+
+  background: var(--color-input-background);
+  border: 1px solid var(--color-line-in-white);
+}
+
+.deleteButton{
+  height: 4.5mm;
+  width: 4.5mm;
+  margin: 0 3mm 0rem 3mm;
+  align-content: center;
+  text-align: center;
+  align-self: center;
+  outline: none;
+  border: none;
+  border-radius: 0.8mm;
+  background: var(--color-input-background);
+  opacity: 85%;
+}
+.deleteButton > img{
+  width: 100%;
+  height: 100%;
+}
+
+label{
+ font-style: normal; 
+}
+
+#ListControl{
+  display: flex;
+  flex-direction: row;
+  margin-top: 5rem;
+  border-radius: 2mm 2mm 2mm 2mm;
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+  box-shadow: rgba(79, 78, 78, 0.522) 1px 0.1px 10px;
+}
+
+#ListControlContent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px 0 10px;
+}
+
+#deleteListBtn{
+  display: flex;
+  border: none;
+  height: 100%;
+  width: 4rem;
+  border-radius: 0 2mm 2mm 0;
+}
+
+#deleteListBtn img{
+  padding-left: 1.5mm;
+  height: 3rem;
+}
+
+footer{
+  height: 9%;
+}
+
+#copyright{
+  margin: 0;
+  text-align: center;
+  color: var(--color-basic-text);
+}
+
+@media (max-width: 650px) {
+  :root {
+    display: flexbox;
+  }
+  header{
+    height:30%;
+  }
+  #ListControl #textControl{
+      text-indent: -9999px;
+      line-height: 0; 
+  }
+  #ListControl #textControl::after{
+    /* content: "3/3"; */
+    text-indent: 0;
+    display: block;
+    line-height: initial; 
+  }
 }
