@@ -6,6 +6,7 @@
   --color-header-background: #8BC6EC;
   --color-header-background-image:linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
   --color-basic-text: rgb(73, 73, 73);
+  --status-tasks:'';
 }
 *{
   margin: 0;
@@ -240,13 +241,16 @@ footer{
     height:30%;
   }
   #ListControl #textControl{
-      text-indent: -9999px;
-      line-height: 0; 
+    text-indent: -9999px;
+    line-height: 0; 
   }
   #ListControl #textControl::after{
-    /* content: "3/3"; */
+    content: var(--status-tasks);
     text-indent: 0;
     display: block;
     line-height: initial; 
+  }
+  #ListControl{
+    visibility: hidden;
   }
 }

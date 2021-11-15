@@ -9,7 +9,7 @@ function LoadList(){
 
   if (TaskList===null||TaskList.length==0){
     alert('Bem vindo!\nCrie sua lista agora! :)');
-    createAddInitialELement();
+    createInitialELement();
   }else{
     let countListLeft = 0;
     for(var i=0; i<=TaskList.length-1; i++){
@@ -29,6 +29,7 @@ function AddItem(){
   const TaskList = JSON.parse(localStorage.getItem('lista'))||[];
   const idTaskList = TaskList!==null?TaskList.length+1:0;
   const task = document.getElementById('itemInput').value;
+  const Input = document.getElementById('itemInput');
 
   if(task!=""){
     TaskList.push(idTaskList, task);
@@ -43,7 +44,9 @@ function AddItem(){
  
     setLocalData(itemInfo);
     createListElements(idTaskList, task, false);
-    task.InnerContent = '';
+
+    Input.value = '';
+    Input.focus();
 
     if(TaskList[0]==1){
       CreateControlElements(1,0);
@@ -232,6 +235,13 @@ function CreateControlElements(total, itemsLeft){
   const form = document.getElementById('ListControl');  
   
   form.appendChild(deleteListButton);
+
+  const root = document.documentElement;
+
+  //atualiza o valor da variavel no css para responsividades
+  root.style.setProperty('--status-tasks', `${itemsLeft}/${total}`);
+
+  console.log(root.style.getPropertyValue('--status-tasks'));
 }
 
 function UpdateController(total, itemsLeft){
@@ -240,7 +250,7 @@ function UpdateController(total, itemsLeft){
 const textControl = document.getElementById('textControl'); 
   textControl.innerText = `Concluídas: ${itemsLeft}/${total}`;
 }
-function createAddInitialELement(){
+function createInitialELement(){
   // criacao do elemento inicial da tela quando não tem lista
   const card = document.getElementById("card");
 
@@ -271,6 +281,6 @@ function GetAtualDate(){
 };
 
 function SetFocus(element){
-  alert('Muito bem! Comece digitando sua primeira tarefa.')
+  alert('Muito bem! Comece digitando sua primeira tarefa...')
    element.focus();
 }
