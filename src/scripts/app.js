@@ -112,7 +112,7 @@ function CheckItem(id, label){
   let countListLeft = 0;
 
   for(var i=0; i<=TaskList.length-1; i++){
-    countListLeft += !TaskList[i].taskDone?1:0;
+    countListLeft += !(TaskList[i].taskDone)?0:1;
   };
 
   if(label.style.textDecorationLine==''||label.style.textDecorationLine=='none'){
