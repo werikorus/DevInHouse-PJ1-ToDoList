@@ -13,3 +13,7 @@ Tecnologias usadas:
 * CSS
 * JavaScript
 * LocalSotorage
+
+## Link visualizar o projeto pré-finalizado
+
+* https://dev-in-house-pj-1-to-do-list-h8o8rfzi6-werikorus.vercel.app/
