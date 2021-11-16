@@ -160,10 +160,12 @@ function createListElements(id, taskCaption, taskDone){
         buttonDelete.setAttribute('OnClick',`DeleteItem(${id}, ${itemID})`);
         
   const delImg = document.createElement('IMG');
-  const srcdel = "/assets/images/deleteIMG.png";
+  // const srcdel = "/assets/images/deleteIMG.png";
+  const srcdel = "https://i.ibb.co/LDTwxn0/delete-IMG.png";
 
         delImg.setAttribute('src', srcdel);
         delImg.setAttribute('name','deleteIMG');
+        delImg.setAttribute('alt','x');
 
         buttonDelete.appendChild(delImg);
       
@@ -228,8 +230,11 @@ function CreateControlElements(total, itemsLeft){
 
   const imgDelList = document.createElement('img');
 
-  const srcDelListIMG = "/assets/images/deleteListIMG.png"
+  // const srcDelListIMG = "/assets/images/deleteListIMG.png"
+  const srcDelListIMG = "https://i.ibb.co/R2wYWpH/delete-List-IMG.png"
         imgDelList.setAttribute('src', srcDelListIMG) 
+        imgDelList.setAttribute('alt', 'DEL') 
+        
         deleteListButton.appendChild(imgDelList);
 
   const form = document.getElementById('ListControl');  
@@ -255,7 +260,9 @@ function createInitialELement(){
   const card = document.getElementById("card");
 
   const defaultImg = document.createElement('img');
-  let defaultImgSrc = `/assets/images/createNewList.png`;
+  // let defaultImgSrc = `/assets/images/createNewList.png`;
+  let defaultImgSrc = 'https://i.ibb.co/VtfjPKr/create-New-List.png';
+  
   defaultImg.setAttribute('src', defaultImgSrc);
   defaultImg.setAttribute('id', 'defaultImg');
 
