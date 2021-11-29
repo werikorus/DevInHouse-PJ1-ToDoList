@@ -5,7 +5,7 @@ var itemID = '';
 function LoadList(){
 // carregamento dos dados do localstorage na tela
 
-  const TaskList = JSON.parse(localStorage.getItem('lista'))||[];
+  TaskList = JSON.parse(localStorage.getItem('lista'))||[];
 
   if (TaskList===null||TaskList.length==0){
     alert('Bem vindo!\nCrie sua lista agora! :)');
@@ -13,7 +13,7 @@ function LoadList(){
   }else{
     let countListLeft = 0;
     for(var i=0; i<=TaskList.length-1; i++){
-      countListLeft += !TaskList[i].taskDone?0:1;
+      countListLeft += TaskList[i].taskDone;
 
       createListElements(TaskList[i].id, 
                          TaskList[i].description, 
@@ -21,17 +21,19 @@ function LoadList(){
     };
     CreateControlElements(TaskList.length, countListLeft);
   };
+  
 };
 
 function AddItem(){
 // adiconar 1 item na lista
+  TaskList = JSON.parse(localStorage.getItem('lista'))||[];
 
-  const TaskList = JSON.parse(localStorage.getItem('lista'))||[];
-  const idTaskList = TaskList!==null?TaskList.length+1:0;
+  const idTaskList = TaskList!==null?TaskList.length:0;
+  console.log(idTaskList)
   const task = document.getElementById('itemInput').value;
   const Input = document.getElementById('itemInput');
 
-  if(task!=""){
+  if(task.length!=0){
     TaskList.push(idTaskList, task);
     
     itemInfo = {
@@ -48,16 +50,12 @@ function AddItem(){
     Input.value = '';
     Input.focus();
 
-    if(TaskList[0]==1){
+    TaskList = JSON.parse(localStorage.getItem('lista'))||[];
+
+    if(TaskList.length==1){
       CreateControlElements(1,0);
     }else{
-      let countListLeft = 0;
-
-      for(var i=0; i<=TaskList.length-1; i++){
-        countListLeft += TaskList[i].taskDone?1:0;
-      };
-    
-      UpdateController(TaskList.length-1, countListLeft);
+      UpdateController(TaskList, true);
     }
   }else{  
     alert('Iforme uma tarefa!');
@@ -66,21 +64,25 @@ function AddItem(){
 }; 
 
 function DeleteItem(id, Element){
-// deletar 1 item da lista
-
   if(window.confirm("Quer realmente excluir o item da sua tarefa?")){
-     TaskList.splice(id-1, 1);
+    //colocar condicao para atender o id ultimo sendo menor que o length do array
+    const indexItem = id==1?0:id;
+    console.log(id);
+     TaskList.splice(indexItem, 1);
  
-     if (!(TaskList == [])){
-       localStorage.setItem('lista', JSON.stringify(TaskList)); 
-     };
+    if (TaskList!=[]){
+      localStorage.removeItem('lista');
+      localStorage.setItem('lista',JSON.stringify(TaskList)); 
+    };
 
-     Element.remove();    
-  }
+    Element.remove(this);
 
-  if(TaskList.length==0||TaskList!==null){
-    const controller = document.getElementById('ListControl');
-    controller.remove();  
+    if(TaskList==[]||TaskList.length==0||TaskList==undefined){
+      HideController();
+      createInitialELement();
+    }else{
+      UpdateController(TaskList, false);
+    };
   }
 };
 
@@ -88,6 +90,8 @@ function UpdateItem(id){
 // atualizar o item
 
   TaskList = JSON.parse(localStorage.getItem('lista'));
+  const indexItem = id==1?0:id;
+  console.log(id);
 
   const itemInfo = {
     id: TaskList[id].id,
@@ -102,18 +106,14 @@ function UpdateItem(id){
   if(!(TaskList == [])){
     localStorage.setItem('lista', JSON.stringify(TaskList)); 
   };
+
+  UpdateController(TaskList, false);
 }; 
 
 function CheckItem(id, label){
 // marcar  e estilizasr o item quando a tarefa tiver concluida
 
   TaskList = JSON.parse(localStorage.getItem('lista'));
-
-  let countListLeft = 0;
-
-  for(var i=0; i<=TaskList.length-1; i++){
-    countListLeft += !(TaskList[i].taskDone)?0:1;
-  };
 
   if(label.style.textDecorationLine==''||label.style.textDecorationLine=='none'){
     label.style.textDecorationLine = "line-through"; 
@@ -125,8 +125,7 @@ function CheckItem(id, label){
     label.style.opacity = 1;
   };
 
-  UpdateController(TaskList.length, countListLeft);
-  UpdateItem(id-1);
+  UpdateItem(id);
 };
 
 function createListElements(id, taskCaption, taskDone){
@@ -149,6 +148,7 @@ function createListElements(id, taskCaption, taskDone){
         input.setAttribute("type",'checkbox');
         input.setAttribute("name",'checkItem');
         input.setAttribute("OnChange",`CheckItem(${id}, ${labelID})`);
+    
 
   const label = document.createElement("LABEL");
         label.setAttribute("id",`${labelID}`);
@@ -186,10 +186,10 @@ function createListElements(id, taskCaption, taskDone){
 function setLocalData(dados) {
 //funcao para gravar os dados no localstorage
 
-  TaskList = JSON.parse(localStorage.getItem('lista')) || [];
+  TaskList = JSON.parse(localStorage.getItem('lista'))||[];
 
   //verifica se já existe no array
-  const index = TaskList.indexOf(dados)
+  const index = TaskList.indexOf(dados);
   const existsData = (index !== -1);
 
   //se tiver, remove
@@ -206,55 +206,77 @@ function deleteLocalData(){
   //Deletar itens do localstorage
 
   if(window.confirm("Deseja realmente excluir sua lista?")){
-    const itemsLista = document.getElementsByTagName("li");
-    
-    for(var i=0; i<=itemsLista.length+1; i++){
-      itemsLista[0].remove();
-    }
-    localStorage.removeItem('lista'); 
-  }
+    const li = document.querySelectorAll(".itemList");
+    for(let i = 0; i <= li.length-1; i++ ){
+        l = li[i];
+        l.remove();
+    };
 
-  const controller = document.getElementById('ListControl');
-  controller.remove();  
+    localStorage.removeItem('lista'); 
+    createInitialELement();
+
+    HideController();
+  }
 };
 
 function CreateControlElements(total, itemsLeft){
-  // criacao do botao para deletar a lista   
+  // criacao do botao para deletar a lista  
+   const textControl = document.getElementById('textControl');
+
+   textControl.innerText = `Concluídas: ${itemsLeft}/${total}`;
+ 
+   const deleteListButton = document.createElement("button");
+         deleteListButton.setAttribute('id', 'deleteListBtn'); 
+         deleteListButton.setAttribute('onClick', "deleteLocalData()")
+ 
+   const imgDelList = document.createElement('img');
+ 
+   // const srcDelListIMG = "/assets/images/deleteListIMG.png"
+   const srcDelListIMG = "https://i.ibb.co/R2wYWpH/delete-List-IMG.png"
+         imgDelList.setAttribute('src', srcDelListIMG) 
+         imgDelList.setAttribute('alt', 'DEL') 
+         
+         deleteListButton.appendChild(imgDelList);
+ 
+   const ListControl = document.getElementById('ListControl');
+   ListControl.style.boxShadow = "rgba(79, 78, 78, 0.522) 1px 0.1px 10px";  
+   
+   ListControl.appendChild(deleteListButton);
+   
+ 
+   const root = document.documentElement;
+ 
+   //atualiza o valor da variavel no css para responsividades
+   root.style.setProperty('--status-tasks', `${itemsLeft}/${total}`);
+   console.log(root.style.getPropertyValue('--status-tasks'));
+}
+
+function HideController() {
+  const listControl = document.getElementById('ListControl');
+  listControl.style.boxShadow = "none";
+
+  const deleteListBtn = document.getElementById('deleteListBtn');
+  deleteListBtn.remove();
+
   const textControl = document.getElementById('textControl');
-
-  textControl.innerText = `Concluídas: ${itemsLeft}/${total}`;
-
-  const deleteListButton = document.createElement("button");
-        deleteListButton.setAttribute('id', 'deleteListBtn'); 
-        deleteListButton.setAttribute('onClick', "deleteLocalData()")
-
-  const imgDelList = document.createElement('img');
-
-  // const srcDelListIMG = "/assets/images/deleteListIMG.png"
-  const srcDelListIMG = "https://i.ibb.co/R2wYWpH/delete-List-IMG.png"
-        imgDelList.setAttribute('src', srcDelListIMG) 
-        imgDelList.setAttribute('alt', 'DEL') 
-        
-        deleteListButton.appendChild(imgDelList);
-
-  const form = document.getElementById('ListControl');  
-  
-  form.appendChild(deleteListButton);
-
-  const root = document.documentElement;
-
-  //atualiza o valor da variavel no css para responsividades
-  root.style.setProperty('--status-tasks', `${itemsLeft}/${total}`);
-
-  console.log(root.style.getPropertyValue('--status-tasks'));
+  textControl.innerText = '';
 }
 
-function UpdateController(total, itemsLeft){
-// atualizar as informacoes de controle
+function UpdateController(list, isNew){
+/** Atualizar as informacoes de controle */
 
-const textControl = document.getElementById('textControl'); 
-  textControl.innerText = `Concluídas: ${itemsLeft}/${total}`;
+  TaskList = JSON.parse(localStorage.getItem('lista'))||[];
+
+  const total = isNew?TaskList.length:TaskList.length;
+
+  let itemsDone = 0;
+  for(var i=0; i<=list.length-1; i++){
+    itemsDone += TaskList[i].taskDone?1:0;
+  };
+  const textControl = document.getElementById('textControl'); 
+  textControl.innerText = `Concluídas: ${itemsDone}/${total}`;
 }
+
 function createInitialELement(){
   // criacao do elemento inicial da tela quando não tem lista
   const card = document.getElementById("card");
@@ -265,7 +287,6 @@ function createInitialELement(){
   
   defaultImg.setAttribute('src', defaultImgSrc);
   defaultImg.setAttribute('id', 'defaultImg');
-
   const itemInput = document.getElementById('itemInput');
   defaultImg.setAttribute('onClick',`SetFocus(${itemInput.id})`);
 

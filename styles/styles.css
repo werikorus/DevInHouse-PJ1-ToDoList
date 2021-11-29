@@ -191,6 +191,7 @@ label{
 
 #ListControl{
   display: flex;
+  height: 9mm;
   flex-direction: row;
   margin-top: 3rem;
   margin-bottom: 3rem;
@@ -199,7 +200,8 @@ label{
   align-self: center;
   align-items: center;
   align-content: center;
-  box-shadow: rgba(79, 78, 78, 0.522) 1px 0.1px 10px;
+  /* box-shadow: rgba(79, 78, 78, 0.522) 1px 0.1px 10px; */
+  
 }
 
 #ListControlContent{
@@ -214,13 +216,13 @@ label{
   display: flex;
   border: none;
   height: 100%;
-  width: 4rem;
+  width: 3rem;
   border-radius: 0 2mm 2mm 0;
 }
 
 #deleteListBtn img{
   padding-left: 1.5mm;
-  height: 3rem;
+  /* height: 3rem; */
 }
 
 footer{
@@ -237,9 +239,9 @@ footer{
   color: var(--color-basic-text);
 }
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
   :root {
-    display: flexbox;
+    /* font-size: 70%; */
   }
   header{
     height:30%;
